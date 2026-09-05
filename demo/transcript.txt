@@ -1,0 +1,98 @@
+Independent verifier run, captured 2026-09-05 04:53 UTC
+Command: python demo/tools/verify_chain.py
+Python: Python 3.12.10
+TRACE verifier library: agentrust-trace 0.9.0
+
+
+
+TV-01  Fresh qualifying evidence permits an in-scope request.
+  1. TRACE record signature
+      verifier: agentrust-trace (installed)
+  2. ATF appraisal signature
+  3. appraisal subject matches the requesting agent
+  4. AAuth agent identifier binds to the TRACE subject
+  5. evidence binding by digest
+  6. appraisal freshness
+  7. appraisal currency against the event clock
+  8. status channel availability
+  9. AAuth authorization
+ 10. level meets the resource minimum
+ 11. resource and AGT policy
+  -> decision allow, reason eligible_and_permitted, dispatch dispatched
+PASS  TV-01  allow/eligible_and_permitted
+
+TV-02  Stale appraisal fails closed. The expired Senior level is not reused.
+  1. TRACE record signature
+      verifier: agentrust-trace (installed)
+  2. ATF appraisal signature
+  3. appraisal subject matches the requesting agent
+  4. AAuth agent identifier binds to the TRACE subject
+  5. evidence binding by digest
+  6. appraisal freshness
+  -> decision deny, reason appraisal_stale, dispatch denied_not_dispatched
+PASS  TV-02  deny/appraisal_stale
+
+TV-03  A signed superseding event demotes the agent before the token expires.
+  1. TRACE record signature
+      verifier: agentrust-trace (installed)
+  2. ATF appraisal signature
+  3. appraisal subject matches the requesting agent
+  4. AAuth agent identifier binds to the TRACE subject
+  5. evidence binding by digest
+  6. appraisal freshness
+  7. appraisal currency against the event clock
+  -> decision deny, reason appraisal_superseded, dispatch denied_not_dispatched
+PASS  TV-03  deny/appraisal_superseded
+
+TV-04  Evidence substitution: appraisal bound to record A, record B presented.
+  1. TRACE record signature
+      verifier: agentrust-trace (installed)
+  2. ATF appraisal signature
+  3. appraisal subject matches the requesting agent
+  4. AAuth agent identifier binds to the TRACE subject
+  5. evidence binding by digest
+      presented sha256:4cfe92700fab8ea87d0acc1addcf1fd2623cfaed33053dbb7d7e698c2aa75573
+      appraised sha256:a9def8de609ade6bcbed74c9d016b1fa86c9482be0e476367496f252a5e1f3ea
+  -> decision deny, reason evidence_hash_mismatch, dispatch denied_not_dispatched
+PASS  TV-04  deny/evidence_hash_mismatch
+
+TV-05  Sub-agent does not inherit the parent level implicitly.
+  1. TRACE record signature
+      verifier: agentrust-trace (installed)
+  2. ATF appraisal signature
+  3. appraisal subject matches the requesting agent
+  -> decision deny, reason subject_mismatch, dispatch denied_not_dispatched
+PASS  TV-05  deny/subject_mismatch
+
+TV-06  Senior is eligibility, not permission: local model route forbids the call.
+  1. TRACE record signature
+      verifier: agentrust-trace (installed)
+  2. ATF appraisal signature
+  3. appraisal subject matches the requesting agent
+  4. AAuth agent identifier binds to the TRACE subject
+  5. evidence binding by digest
+  6. appraisal freshness
+  7. appraisal currency against the event clock
+  8. status channel availability
+  9. AAuth authorization
+ 10. level meets the resource minimum
+ 11. resource and AGT policy
+  -> decision deny, reason model_route_denied, dispatch denied_not_dispatched
+PASS  TV-06  deny/model_route_denied
+
+TV-07  High-risk resource cannot reach the status channel. Unknown is not current.
+  1. TRACE record signature
+      verifier: agentrust-trace (installed)
+  2. ATF appraisal signature
+  3. appraisal subject matches the requesting agent
+  4. AAuth agent identifier binds to the TRACE subject
+  5. evidence binding by digest
+  6. appraisal freshness
+  7. appraisal currency against the event clock
+  8. status channel availability
+  -> decision deny, reason status_unavailable, dispatch denied_not_dispatched
+PASS  TV-07  deny/status_unavailable
+
+7/7 cases matched their expected outcome.
+
+Exit code: 0

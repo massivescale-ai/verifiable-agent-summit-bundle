@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chain of Custody Run</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;1,400&display=swap">
+<style>
+:root {
+  --ground: #eef0f4;
+  --surface: #ffffff;
+  --surface-sunk: #f6f7fa;
+  --ink: #131a24;
+  --ink-soft: #4a5563;
+  --ink-faint: #7b8593;
+  --rule: #d5dae2;
+  --rule-strong: #b9c1cd;
+  --accent: #2f5fa8;
+  --pass: #0f6f5c;
+  --pass-bg: #e3f1ec;
+  --refuse: #ad3f2a;
+  --refuse-bg: #f8e7e2;
+  --shadow: 0 1px 2px rgba(19, 26, 36, .06), 0 12px 28px -18px rgba(19, 26, 36, .35);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0d141d;
+    --surface: #141d28;
+    --surface-sunk: #101825;
+    --ink: #e6eaf0;
+    --ink-soft: #a7b2c0;
+    --ink-faint: #78838f;
+    --rule: #243141;
+    --rule-strong: #33455a;
+    --accent: #7aa7e8;
+    --pass: #4fc0a3;
+    --pass-bg: #0f2b26;
+    --refuse: #e8836a;
+    --refuse-bg: #2d1712;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 14px 30px -20px rgba(0, 0, 0, .8);
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #0d141d;
+  --surface: #141d28;
+  --surface-sunk: #101825;
+  --ink: #e6eaf0;
+  --ink-soft: #a7b2c0;
+  --ink-faint: #78838f;
+  --rule: #243141;
+  --rule-strong: #33455a;
+  --accent: #7aa7e8;
+  --pass: #4fc0a3;
+  --pass-bg: #0f2b26;
+  --refuse: #e8836a;
+  --refuse-bg: #2d1712;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 14px 30px -20px rgba(0, 0, 0, .8);
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: "IBM Plex Serif", Georgia, serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: clamp(28px, 5vw, 64px) clamp(18px, 4vw, 44px) 72px;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(32px, 4vw, 52px);
+}
+h1, h2, h3, .label, .run__verdict, .step__n, .step__state, dt {
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+}
+h1 {
+  font-size: clamp(1.9rem, 4.2vw, 2.9rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -.02em;
+  text-wrap: balance;
+  margin: 0;
+}
+h2 {
+  font-size: 1.18rem;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  margin: 0;
+}
+h3 { font-size: 1.05rem; font-weight: 600; margin: .2rem 0 0; }
+p { margin: 0; }
+.mono, .num { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+.num { font-variant-numeric: tabular-nums; }
+.label {
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.masthead { display: flex; flex-direction: column; gap: 14px; }
+.masthead__chain {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+  font-family: "IBM Plex Sans", sans-serif; font-size: .82rem; color: var(--ink-soft);
+}
+.masthead__chain b { color: var(--ink); font-weight: 600; }
+.masthead__chain span[aria-hidden] { color: var(--rule-strong); }
+.lede { max-width: 62ch; color: var(--ink-soft); font-size: 1.03rem; }
+.stamp {
+  display: flex; flex-wrap: wrap; gap: 8px 22px;
+  padding-top: 14px; border-top: 1px solid var(--rule);
+  font-family: "IBM Plex Mono", monospace; font-size: .78rem; color: var(--ink-faint);
+}
+
+.facts {
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 4px;
+  box-shadow: var(--shadow); overflow: hidden;
+}
+.facts__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.fact { padding: 16px 20px; border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.fact:last-child { border-right: 0; }
+.fact dt { font-size: .7rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
+.fact dd { margin: 6px 0 0; font-family: "IBM Plex Mono", monospace; font-size: .84rem; word-break: break-all; }
+.fact dd.big { font-size: 1rem; font-weight: 500; letter-spacing: .02em; }
+
+.runs { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); align-items: start; }
+.run {
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 4px;
+  box-shadow: var(--shadow); overflow: hidden;
+  border-top: 3px solid var(--rule-strong);
+}
+.run--allow { border-top-color: var(--pass); }
+.run--deny { border-top-color: var(--refuse); }
+.run__head { padding: 18px 20px 16px; display: flex; flex-direction: column; gap: 8px; }
+.run__verdict {
+  align-self: flex-start; font-size: .72rem; font-weight: 600; letter-spacing: .14em;
+  padding: 3px 9px; border-radius: 2px;
+}
+.run--allow .run__verdict { color: var(--pass); background: var(--pass-bg); }
+.run--deny .run__verdict { color: var(--refuse); background: var(--refuse-bg); }
+.run__blurb { color: var(--ink-soft); font-size: .92rem; }
+.run__meta { display: flex; flex-wrap: wrap; gap: 6px 20px; margin: 6px 0 0; }
+.run__meta div { display: flex; flex-direction: column; }
+.run__meta dt { font-size: .66rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
+.run__meta dd { margin: 0; font-size: .86rem; }
+
+.steps { list-style: none; margin: 0; padding: 0 0 6px; border-top: 1px solid var(--rule); }
+.step {
+  display: grid; grid-template-columns: 34px 1fr auto; align-items: baseline; gap: 10px;
+  padding: 7px 20px; font-size: .87rem;
+}
+.step__n { font-size: .72rem; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+.step__state { font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); }
+.step--ok .step__name { color: var(--ink); }
+.step--ok .step__state { color: var(--pass); }
+.step--stop { background: var(--refuse-bg); }
+.step--stop .step__name { color: var(--ink); font-weight: 500; }
+.step--stop .step__state, .step--stop .step__n { color: var(--refuse); font-weight: 600; }
+.step--skip .step__name, .step--skip .step__n { color: var(--ink-faint); }
+
+.notes { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.note {
+  background: var(--surface-sunk); border: 1px solid var(--rule); border-left: 3px solid var(--accent);
+  border-radius: 3px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px;
+}
+.note--limit { border-left-color: var(--refuse); }
+.note p, .note li { font-size: .92rem; color: var(--ink-soft); }
+.note ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 5px; }
+
+.repro { background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; padding: 18px 20px; display: flex; flex-direction: column; gap: 12px; }
+.repro pre {
+  margin: 0; padding: 14px 16px; background: var(--surface-sunk); border: 1px solid var(--rule);
+  border-radius: 3px; overflow-x: auto; font-family: "IBM Plex Mono", monospace; font-size: .82rem;
+  line-height: 1.75; color: var(--ink);
+}
+footer { border-top: 1px solid var(--rule); padding-top: 18px; color: var(--ink-faint); font-size: .84rem; }
+a { color: var(--accent); }
+a:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <p class="label">Verifiable Agent Summit &middot; integration run</p>
+    <h1>A judgment an agent cannot keep spending</h1>
+    <div class="masthead__chain">
+      <b>TRACE</b> evidence <span aria-hidden="true">&rarr;</span>
+      <b>ATF</b> judgment <span aria-hidden="true">&rarr;</span>
+      <b>AAuth</b> delivery <span aria-hidden="true">&rarr;</span>
+      <b>resource</b> decision
+    </div>
+    <p class="lede">
+      Three runs of the same chain, captured from live execution. Every record and
+      appraisal below was signed with Ed25519 over RFC 8785 canonical JSON at the
+      moment this page was generated, and every verdict came from an independent
+      verifier reading only the public keys.
+    </p>
+    <div class="stamp">
+      <span>captured 05 September 2026, 04:53:41 UTC</span>
+      <span>profile tag:agentrust-io.com,2026:trace-v0.2</span>
+      <span>appraisal seq 42</span>
+    </div>
+  </header>
+
+  <section class="facts" aria-label="Artifacts in this run">
+    <dl class="facts__grid">
+      <div class="fact"><dt>Trust record digest</dt><dd>sha256:59631011af6a515dfa8bb4f53d3cf5d662ca4d03e2f63d447a939f60ecbb231e</dd></div>
+      <div class="fact"><dt>Appraised level</dt><dd class="big">SENIOR</dd></div>
+      <div class="fact"><dt>Token validity (UTC)</dt><dd>04:53:40 &rarr; 05:53:40</dd></div>
+      <div class="fact"><dt>Superseding event</dt><dd>seq 43 &middot; ATF-ROUTE-PROHIBITED</dd></div>
+      <div class="fact"><dt>TRACE issuer key</dt><dd>gljedAktsShnHzGq8fqfaabEI2xgyKnnW_99tC5o5e8</dd></div>
+      <div class="fact"><dt>ATF evaluator key</dt><dd>NlLutSsJmPKHPJdjPbls98wWc3PRqPfCBP7Y--7kU5w</dd></div>
+    </dl>
+  </section>
+
+  <section aria-label="Runs">
+    <h2>Three runs, one verifier</h2>
+    <p class="lede" style="margin-top:8px">
+      The eleven checks run in a fixed order. Where a run stops is the diagnosis,
+      so the step it refuses at matters as much as the refusal.
+    </p>
+    <div class="runs" style="margin-top:20px">
+
+      <article class="run run--allow" id="permitted">
+        <header class="run__head">
+          <p class="run__verdict">ALLOW</p>
+          <h3>The request goes through</h3>
+          <p class="run__blurb">Fresh evidence, a current judgment, a level that clears the bar, and local policy that allows the call.</p>
+          <dl class="run__meta">
+            <div><dt>reason</dt><dd class="mono">eligible_and_permitted</dd></div>
+            <div><dt>dispatch</dt><dd>dispatched</dd></div>
+            <div><dt>decided in</dt><dd class="num">0.97 ms</dd></div>
+          </dl>
+        </header>
+        <ol class="steps">
+<li class="step step--ok"><span class="step__n">01</span><span class="step__name">TRACE record signature</span><span class="step__state">pass</span></li>
+<li class="step step--ok"><span class="step__n">02</span><span class="step__name">ATF appraisal signature</span><span class="step__state">pass</span></li>
+<li class="step step--ok"><span class="step__n">03</span><span class="step__name">appraisal subject matches the requesting agent</span><span class="step__state">pass</span></li>
+<li class="step step--ok"><span class="step__n">04</span><span class="step__name">AAuth agent identifier binds to the TRACE subject</span><span class="step__state">pass</span></li>
+<li class="step step--ok"><span class="step__n">05</span><span class="step__name">evidence binding by digest</span><span class="step__state">pass</span></li>
+<li class="step step--ok"><span class="step__n">06</span><span class="step__name">appraisal freshness</span><span class="step__state">pass</span></li>
+<li class="step step--ok"><span class="step__n">07</span><span class="step__name">appraisal currency against the event clock</span><span class="step__state">pass</span></li>
+<li class="step step--ok"><span class="step__n">08</span><span class="step__name">status channel availability</span><span class="step__state">pass</span></li>
+<li class="step step--ok"><span class="step__n">09</span><span class="step__name">AAuth authorization</span><span class="step__state">pass</span></li>
+<li class="step step--ok"><span class="step__n">10</span><span class="step__name">level meets the resource minimum</span><span class="step__state">pass</span></li>
+<li class="step step--ok"><span class="step__n">11</span><span class="step__name">resource and AGT policy</span><span class="step__state">pass</span></li>
+        </ol>
+      </article>
+
+      <article class="run run--deny" id="superseded">
+        <header class="run__head">
+          <p class="run__verdict">DENY</p>
+          <h3>The same token stops working</h3>
+          <p class="run__blurb">A signed event supersedes appraisal 42 with 58m 29s still left on the token. Nothing expired. The agent changed.</p>
+          <dl class="run__meta">
+            <div><dt>reason</dt><dd class="mono">appraisal_superseded</dd></div>
+            <div><dt>dispatch</dt><dd>denied, not dispatched</dd></div>
+            <div><dt>decided in</dt><dd class="num">0.58 ms</dd></div>
+          </dl>
+        </header>
+        <ol class="steps">
+<li class="step step--ok"><span class="step__n">01</span><span class="step__name">TRACE record signature</span><span class="step__state">pass</span></li>
+<li class="step step--ok"><span class="step__n">02</span><span class="step__name">ATF appraisal signature</span><span class="step__state">pass</span></li>
+<li class="step step--ok"><span class="step__n">03</span><span class="step__name">appraisal subject matches the requesting agent</span><span class="step__state">pass</span></li>
+<li class="step step--ok"><span class="step__n">04</span><span class="step__name">AAuth agent identifier binds to the TRACE subject</span><span class="step__state">pass</span></li>
+<li class="step step--ok"><span class="step__n">05</span><span class="step__name">evidence binding by digest</span><span class="step__state">pass</span></li>
+<li class="step step--ok"><span class="step__n">06</span><span class="step__name">appraisal freshness</span><span class="step__state">pass</span></li>
+<li class="step step--stop"><span class="step__n">07</span><span class="step__name">appraisal currency against the event clock</span><span class="step__state">refused here</span></li>
+<li class="step step--skip"><span class="step__n">08</span><span class="step__name">status channel availability</span><span class="step__state">not reached</span></li>
+<li class="step step--skip"><span class="step__n">09</span><span class="step__name">AAuth authorization</span><span class="step__state">not reached</span></li>
+<li class="step step--skip"><span class="step__n">10</span><span class="step__name">level meets the resource minimum</span><span class="step__state">not reached</span></li>
+<li class="step step--skip"><span class="step__n">11</span><span class="step__name">resource and AGT policy</span><span class="step__state">not reached</span></li>
+        </ol>
+      </article>
+
+      <article class="run run--deny" id="substituted">
+        <header class="run__head">
+          <p class="run__verdict">DENY</p>
+          <h3>Swapped evidence is refused</h3>
+          <p class="run__blurb">A second, validly signed record is presented under the judgment that was made about the first one.</p>
+          <dl class="run__meta">
+            <div><dt>reason</dt><dd class="mono">evidence_hash_mismatch</dd></div>
+            <div><dt>dispatch</dt><dd>denied, not dispatched</dd></div>
+            <div><dt>decided in</dt><dd class="num">0.42 ms</dd></div>
+          </dl>
+        </header>
+        <ol class="steps">
+<li class="step step--ok"><span class="step__n">01</span><span class="step__name">TRACE record signature</span><span class="step__state">pass</span></li>
+<li class="step step--ok"><span class="step__n">02</span><span class="step__name">ATF appraisal signature</span><span class="step__state">pass</span></li>
+<li class="step step--ok"><span class="step__n">03</span><span class="step__name">appraisal subject matches the requesting agent</span><span class="step__state">pass</span></li>
+<li class="step step--ok"><span class="step__n">04</span><span class="step__name">AAuth agent identifier binds to the TRACE subject</span><span class="step__state">pass</span></li>
+<li class="step step--stop"><span class="step__n">05</span><span class="step__name">evidence binding by digest</span><span class="step__state">refused here</span></li>
+<li class="step step--skip"><span class="step__n">06</span><span class="step__name">appraisal freshness</span><span class="step__state">not reached</span></li>
+<li class="step step--skip"><span class="step__n">07</span><span class="step__name">appraisal currency against the event clock</span><span class="step__state">not reached</span></li>
+<li class="step step--skip"><span class="step__n">08</span><span class="step__name">status channel availability</span><span class="step__state">not reached</span></li>
+<li class="step step--skip"><span class="step__n">09</span><span class="step__name">AAuth authorization</span><span class="step__state">not reached</span></li>
+<li class="step step--skip"><span class="step__n">10</span><span class="step__name">level meets the resource minimum</span><span class="step__state">not reached</span></li>
+<li class="step step--skip"><span class="step__n">11</span><span class="step__name">resource and AGT policy</span><span class="step__state">not reached</span></li>
+        </ol>
+      </article>
+    </div>
+  </section>
+
+  <section class="notes" aria-label="What this shows">
+    <div class="note">
+      <p class="label">Finding one</p>
+      <p><b>Expiry is not currency.</b> The second run refuses a token that is still
+      cryptographically valid and still inside its validity window, because a signed
+      event superseded the judgment behind it. A verifier that checks <span class="mono">exp</span>
+      and stops accepts that request.</p>
+    </div>
+    <div class="note">
+      <p class="label">Finding two</p>
+      <p><b>A level is eligibility, never permission.</b> Clearing the trust bar buys
+      the agent the right to be considered. Route, budget, mission, and local policy
+      still decide, and they decide last.</p>
+    </div>
+    <div class="note note--limit">
+      <p class="label">What this does not show</p>
+      <ul>
+        <li>Runtime measurements are fixture values, not a live enclave quote.</li>
+        <li>The ATF profile version is a placeholder until it is fixed.</li>
+        <li>AAuth carriage is modelled as JSON, not a real token.</li>
+        <li>Issuer and verifier ran on one machine, so this is an integration
+        proposal, not an interop result.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="repro">
+    <h2>Check it without trusting the page</h2>
+    <p class="lede">The run exports a bundle carrying the records, the appraisals,
+    the signed event, and the public keys. Nothing in it needs us to be online.</p>
+    <pre>python demo/tools/stage.py --export bundle/
+python demo/tools/verify_chain.py --bundle bundle/</pre>
+    <p style="font-size:.88rem;color:var(--ink-soft)">Exit code 0 means every case
+    matched its expected outcome. Change one byte in any record and the first run
+    turns into <span class="mono">deny / invalid_trace_signature</span>.</p>
+  </section>
+
+  <footer>
+    Generated by <span class="mono">demo/tools/render_report.py</span> in the
+    Verifiable Agent Summit working repo. TRACE is the evidence, ATF is the
+    judgment, AAuth is the delivery.
+  </footer>
+</div>
+</html>

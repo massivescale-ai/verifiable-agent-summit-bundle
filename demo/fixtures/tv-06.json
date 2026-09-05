@@ -1,0 +1,120 @@
+{
+  "case": "TV-06",
+  "note": "Senior is eligibility, not permission: local model route forbids the call.",
+  "request": {
+    "agent_id": "aauth:planner@example",
+    "session_id": "urn:uuid:11111111-1111-1111-1111-111111111111",
+    "resource": "https://inference.example/v1/chat",
+    "action": "chat.completion",
+    "model": "model://approved/summarizer-v3",
+    "request_time": 1786749000
+  },
+  "agent_binding": {
+    "aauth:planner@example": "spiffe://example.org/agent/planner",
+    "aauth:worker@example": "spiffe://example.org/agent/worker"
+  },
+  "aauth": {
+    "proof_of_possession_valid": true,
+    "mission_allows": true
+  },
+  "trace_record": {
+    "eat_profile": "tag:agentrust-io.com,2026:trace-v0.2",
+    "iat": 1786748400,
+    "subject": "spiffe://example.org/agent/planner",
+    "model": {
+      "provider": "example",
+      "model_id": "summarizer-v3",
+      "version": "20260601"
+    },
+    "runtime": {
+      "platform": "tpm2",
+      "measurement": "sha256:e994981fe7a2409e20f25c9d2b436130ae3c97006185918d6b37b2dbb2c7fa69",
+      "rim_uri": "https://registry.example/rim/agent-runtime-v1",
+      "nonce": "ZGVtby1ub25jZS12YXMtMjAyNg",
+      "firmware_version": "7.85"
+    },
+    "policy": {
+      "bundle_hash": "sha256:f4c26445ea31e0c9209efe7c065cc398f1100b77bbb9a6124a12a72439da6bb3",
+      "enforcement_mode": "enforce",
+      "version": "cui-summarize-v2.1",
+      "policy_uri": "https://registry.example/policy/cui-summarize-v2.1"
+    },
+    "data_class": "confidential",
+    "tool_transcript": {
+      "hash": "sha256:553494dbca57c42653cc782ef423977ca64ed1917f3423f31e79674f296aacc0",
+      "call_count": 4
+    },
+    "build_provenance": {
+      "slsa_level": 2,
+      "builder": "https://github.com/example-org/agent-runtime/.github/workflows/release.yml",
+      "digest": "sha256:8aacb0f60ce141de3b7f341dd7a488e8281c7d8df9a4c1936a77ec67d4e2a827",
+      "provenance_uri": "https://transparency.example/entries/demo"
+    },
+    "appraisal": {
+      "status": "affirming",
+      "verifier": "https://verifier.example/tpm",
+      "policy_ref": "https://registry.example/policy/tpm2-appraisal-v1",
+      "timestamp": 1786748400
+    },
+    "cnf": {
+      "jwk": {
+        "kty": "OKP",
+        "crv": "Ed25519",
+        "x": "AJDwBsEuRt2VBdDNChbBwYB98O_4n_JzuVj_6ivVAp4"
+      }
+    },
+    "signature": "6cxVzBL4nURJtR7OwJM2XeNbW3abXaO8OQoMEa9i4A5eTiDZ4N9JX0QaqQE1z_r6j8pNJhFuZRSfHE16nbqVDQ"
+  },
+  "appraisal": {
+    "type": "atf-appraisal-result",
+    "version": "0.1-draft",
+    "appraisal_id": "urn:uuid:862d48137262b8fb9b565bc8a89b98c1",
+    "issuer": "https://evaluator.example",
+    "subject": {
+      "agent_id": "aauth:planner@example",
+      "session_id": "urn:uuid:11111111-1111-1111-1111-111111111111"
+    },
+    "profile": {
+      "id": "csa-atf",
+      "version": "0.0-placeholder",
+      "policy_hash": "sha256:46c10683f72b949293d76300f4bc9f73c378061fa89cb36b3020b3986c02118b"
+    },
+    "evidence": {
+      "trace_profile": "tag:agentrust-io.com,2026:trace-v0.2",
+      "record_id": "urn:uuid:f054a8ec4bb7b75b57c79ab9ac8aeb52",
+      "record_hash": "sha256:a9def8de609ade6bcbed74c9d016b1fa86c9482be0e476367496f252a5e1f3ea",
+      "verification_level": 1
+    },
+    "result": {
+      "trust_level": "senior",
+      "decision": "qualifying",
+      "reason_codes": [
+        "ATF-ID-OK",
+        "ATF-POLICY-BOUND"
+      ],
+      "limitations": []
+    },
+    "iat": 1786748400,
+    "exp": 1786752000,
+    "sequence": 42,
+    "supersedes": 41,
+    "signature": "ktsNCL36xq4SK13C7I0ox1m6--NFGK2fIsSdJXIaj7bH0nKAvV5A7Q6P9St3L75ikwU5cr8g1NxVZdkUWwXwCQ"
+  },
+  "status_channel": {
+    "available": true,
+    "latest_sequence": 42,
+    "events": []
+  },
+  "policy": {
+    "minimum_level": "senior",
+    "local_policy_allows": true,
+    "budget_allows": true,
+    "model_route_allows": false,
+    "requires_current_status": false,
+    "on_status_unavailable": "deny"
+  },
+  "expected": {
+    "decision": "deny",
+    "reason": "model_route_denied"
+  }
+}
