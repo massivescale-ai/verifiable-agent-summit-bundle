@@ -106,9 +106,10 @@ is evidence the chain holds outside the process that produced it.
 
 ## Tell us what broke
 
-Answer the questions in `attendee/challenge.md` through the CSA survey. The
-cases that survive scrutiny and the ones that do not both go into the October
-30 workshop.
+Bring a question from `attendee/challenge.md` to the live chat during the
+briefing. Keep the commands, versions and outcomes for any case you run.
+Participation details for the proposed October exercise will be announced
+when the protocol and submission destinations are confirmed.
 
 ## Provenance
 

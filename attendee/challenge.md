@@ -52,15 +52,16 @@ For each request, identify:
 7. Does the asserted trust level meet the resource minimum?
 8. Does local resource policy permit this specific action?
 
-## Submit your observations
+## Prepare a verification question
 
-Please answer these questions in the CSA survey:
+Bring one of these questions to the live chat during the briefing. Keep your
+verification commands and outcomes for the proposed October exercise:
 
 1. Which claims could you independently verify?
 2. Which claim appeared meaningful but was not supported by evidence?
 3. Would your organization rely on this chain at an agent trust boundary? Why or why not?
 4. Did the superseded and substituted cases fail as you expected?
-5. What should we test at the October 30 workshop?
+5. What should the proposed October exercise test?
 
 ## What this challenge does not establish
 
