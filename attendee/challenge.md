@@ -37,7 +37,7 @@ If you cannot run code, inspect these committed artifacts:
 - `demo/fixtures/tv-03.json`: an unexpired claim refused after a signed demotion
 - `demo/fixtures/tv-04.json`: a different valid record refused because its digest was not appraised
 - `demo/transcript.txt`: the complete seven-case verifier output
-- `demo/interface-contract.md`: the proposed responsibility and verification boundaries
+- `demo/resource-contract.md`: the proposed responsibility and verification boundaries
 
 ## What to look for
 
@@ -77,3 +77,10 @@ Please answer these questions in the CSA survey:
 ## The shared model
 
 > TRACE is the evidence. ATF is the judgment. AAuth is the delivery. The relying party still decides.
+
+## Deployed resource boundary
+
+The demotion and status cases above exercise the local fixture verifier. The
+September 7 deployed resource capture is separate and demonstrates no live
+status feed. See `demo/provider/captures/september-7/README.md` and the resource
+contract for the observed results and verification limits.

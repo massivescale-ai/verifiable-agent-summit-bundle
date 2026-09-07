@@ -1,0 +1,9 @@
+{
+  "checked_at": 1788809594,
+  "record_hash": "sha256:8d30f2194c9a18b120b52e086689208a18af0bf114973ad007e10d6ca4052dd0",
+  "signature": "PASS",
+  "changed_field": "subject",
+  "tampered_signature": "REJECTED",
+  "canonicalization": "RFC 8785",
+  "runtime_evidence": "declared fixture values"
+}

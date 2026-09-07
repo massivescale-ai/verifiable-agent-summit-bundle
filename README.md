@@ -4,6 +4,25 @@ The public verification bundle for the CSA virtual briefing on September 9,
 2026. It holds the signed artifacts, an independent verifier, and the captured
 run, so you can check the chain without the systems that produced it.
 
+## September 7 capture and fixture scope
+
+The deployed resource capture is in `demo/provider/captures/september-7/`.
+All five agreed cases matched, including an allow and the same token refused
+after real expiry. The public signed record, evaluator appraisal, public keys,
+artifact hashes and credential-free response captures are included.
+
+The seven original vectors remain a separate local fixture exercise. Their
+demotion and status-unavailable results do not describe the deployed resource.
+The resource verifies provider and request signatures; it does not resolve the
+evaluator appraisal or consume live status. Direct agent-token access has no
+conforming live revocation path in the demonstrated flow.
+
+The signed artifacts can be checked offline with the supplied keys. The
+pre-issuance verifier uses the current clock and will now reject the expired
+appraisal; `handoff-verification.json` records its successful live-window run.
+No token or private signing key is included. HTTP token headers are redacted,
+so these transcripts are evidence of the reported run, not replayable requests.
+
 ## The question
 
 An agent asks to call a protected resource. It presents a signed authorization
@@ -52,10 +71,10 @@ is evidence the chain holds outside the process that produced it.
 | `demo/fixtures/keys/` | Public verification keys, TRACE issuer and ATF evaluator |
 | `demo/transcript.txt` | The captured seven-case run |
 | `demo/test-vectors.md` | Expected results and the threat case behind each one |
-| `demo/interface-contract.md` | The proposed responsibility and verification boundaries |
-| `demo/report.html` | A rendered report of a live run, for reading without Python |
+| `demo/resource-contract.md` | The deployed resource contract and its limits |
+| `demo/report.html` | A rendered report of the local fixture exercise, for reading without Python |
 
-## What this bundle establishes
+## What the seven local fixture vectors establish
 
 - A runtime evidence record can be verified separately from the system that
   produced it.
@@ -69,12 +88,10 @@ is evidence the chain holds outside the process that produced it.
 
 ## What it does not establish
 
-- Two organizations operate the three signing keys in these vectors. The TRACE
-  issuer and the AAuth stub are OPAQUE's, the ATF evaluator is
-  MassiveScale.AI's. This is not three independent implementations.
-- The AAuth link is a placeholder until an independently operated issuer
-  produces a real token. When that lands, the vectors are reissued and this
-  note goes away.
+- The seven vectors are a deterministic local fixture exercise. Independent
+  deployment behavior is recorded separately in the September 7 capture.
+- The AAuth link in those vectors remains modeled JSON. Do not infer live
+  status propagation or revocation from its signed demotion fixture.
 - The ATF profile is drafted for this exercise from ATF v0.9.1 and is not
   CSA-ratified.
 - The signatures are real. Runtime measurement, policy digest, transcript
@@ -97,7 +114,10 @@ cases that survive scrutiny and the ones that do not both go into the October
 
 Built from `massivescale-ai/verifiable-agent-summit` at commit
 `c48682a4bb279856f75a52d6ecc42fa405228365`, September 5, 2026. `SHA256SUMS`
-lists every file in this bundle. Check them with `sha256sum -c SHA256SUMS`.
+lists every payload file, excluding itself. The September 7 refresh uses
+working-repository commit `9be0de07ef64092b6c8baa6689eea50f26d445ef` for the approved resource
+contract, labeled fallback, versioned captures and offline preflight. The original
+seven signed fixtures are unchanged. Check them with `sha256sum -c SHA256SUMS`.
 
 ## License
 

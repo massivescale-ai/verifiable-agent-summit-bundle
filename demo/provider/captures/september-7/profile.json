@@ -1,0 +1,147 @@
+{
+  "id": "csa-atf",
+  "version": "0.9.1",
+  "name": "CSA ATF demo evaluation profile",
+  "status": "Demo evaluation profile derived from ATF v0.9.1. Drafted for the Verifiable Agent Summit exercise. Not CSA-ratified. The per-level evidence mapping is a proposal headed for the v1.0 working group.",
+  "drafted": "2026-08-31",
+  "claim_namespace": "https://agentictrustframework.ai/atf",
+  "evidence_profile": "tag:agentrust-io.com,2026:trace-v0.2",
+  "appraisal_type": "atf-appraisal-result",
+  "canonicalization": "RFC 8785",
+  "signature_algorithm": "Ed25519",
+  "policy_hash_rule": "sha256 over the RFC 8785 canonical form of this document. The hash is not carried inside the document, so the value in an appraisal is recomputable from the file alone.",
+
+  "levels": {
+    "ordered": ["intern", "junior", "senior", "principal"],
+    "cumulative": true,
+    "unknown_value": "reject",
+    "on_unknown_value": "A level outside this ordered list MUST be rejected and treated as no claim. It MUST NOT be mapped to the nearest known level, and it MUST NOT be treated as the lowest level.",
+    "on_no_qualifying_level": "no_claim",
+    "note": "A level is an appraisal of one evidence object under this profile at one time. It is eligibility for consideration, never permission."
+  },
+
+  "freshness": {
+    "record_window_seconds": 3600,
+    "clock_skew_seconds": 300,
+    "appraisal_ttl_seconds": 3600,
+    "note": "Record freshness is measured from the record iat to the evaluation time. A record dated in the future beyond clock_skew_seconds is rejected."
+  },
+
+  "subject_resolution": {
+    "agent_id_from": ["agent_id", "subject.agent_id", "sub", "subject"],
+    "session_id_from": ["session_id", "session.id", "observation.session_id"],
+    "session_fallback": "record",
+    "note": "The evaluator reads the subject from the record it appraises and never from configuration. TRACE v0.2 records as fixtured carry no session identifier, so when none is present the observation boundary is the record itself, the session identifier is derived from the record digest, and the appraisal records ATF-SESSION-DERIVED as a limitation. That is a gap in the evidence contract, not a property of the agent."
+  },
+
+  "subject_binding": {
+    "agent_id": "The principal the evidence names, resolved by subject_resolution. The evaluator does not invent an identifier in the AAuth namespace.",
+    "workload_id": "The TRACE record subject, copied verbatim. Proposed additive assertion so a relying party can check an AAuth agent identifier against the workload identity the evidence actually named. Whether the two are the same principal is still open as D-05, and this field states the evaluator's input rather than settling it.",
+    "status": "proposal"
+  },
+
+  "required_modules": [
+    "identity",
+    "policy_binding",
+    "transcript_binding",
+    "model_identity",
+    "platform_appraisal"
+  ],
+
+  "verification_levels": {
+    "-1": "The record signature did not verify against the configured trust anchor. No module result is meaningful and no level is claimed.",
+    "0": "The record signature verifies against a configured trust anchor. Nothing else is asserted.",
+    "1": "Level 0 plus every module in required_modules evaluates PASS.",
+    "2": "Level 1 plus a hardware root-of-trust report from a platform in attested_platforms binds the runtime measurement.",
+    "note": "A TPM2 record in this exercise carries an affirming verifier statement but no quote the evaluator can re-check, so it stays at 1."
+  },
+
+  "attested_platforms": ["amd-sev-snp", "azure-cvm-sev-snp", "intel-tdx"],
+
+  "gates": {
+    "intern": [
+      {
+        "code": "ATF-TRACE-SIG",
+        "requirement": "The TRACE record signature verifies against a configured trust anchor and eat_profile equals evidence_profile.",
+        "blocks": "An unverifiable or off-profile record yields no claim at any level."
+      },
+      {
+        "code": "ATF-SUBJECT-PRESENT",
+        "requirement": "An agent identifier and a session identifier are resolvable from the record under subject_resolution.",
+        "blocks": "Without a subject and an observation boundary there is nothing to bind a judgment to."
+      },
+      {
+        "code": "ATF-FRESH",
+        "requirement": "The record iat falls within freshness.record_window_seconds of the evaluation time, allowing freshness.clock_skew_seconds of forward skew.",
+        "blocks": "Stale evidence is not current evidence."
+      }
+    ],
+    "junior": [
+      {
+        "code": "ATF-POLICY-BOUND",
+        "requirement": "policy.bundle_hash is present and is a well formed sha256 digest.",
+        "blocks": "Without the exact policy digest the judgment does not say which controls were in force."
+      },
+      {
+        "code": "ATF-TRANSCRIPT-BOUND",
+        "requirement": "tool_transcript.hash is present and is a well formed sha256 digest.",
+        "blocks": "Without a transcript digest the governed activity in the session is unbounded."
+      }
+    ],
+    "senior": [
+      {
+        "code": "ATF-MODEL-ID",
+        "requirement": "Model identity is verified: model.provider, model.model_id, and model.version are present and the record's platform appraisal status is affirming.",
+        "blocks": "An unidentified or unaffirmed model route cannot carry a senior judgment."
+      },
+      {
+        "code": "ATF-MODULES-PASS",
+        "requirement": "Every module in required_modules evaluates PASS and the computed verification level is 1 or higher.",
+        "blocks": "A partial verification is not a senior verification."
+      },
+      {
+        "code": "ATF-STATUS-REF",
+        "requirement": "The appraisal carries a status channel reference a relying party can query for supersession.",
+        "blocks": "An evaluator that publishes no status channel cannot issue senior under this profile, because the demotion path would not exist."
+      }
+    ],
+    "principal": [
+      {
+        "code": "ATF-HW-ROOT",
+        "requirement": "A hardware-rooted runtime measurement is present: the computed verification level is 2 or higher, or runtime.platform is in attested_platforms with a non-empty runtime.measurement.",
+        "blocks": "Principal claims a hardware root of trust, so a software-asserted measurement does not reach it."
+      },
+      {
+        "code": "ATF-TRANSPARENCY",
+        "requirement": "A transparency anchor for this record is present and names a log entry: record.transparency as an https URI, or record.transparency_anchor carrying a log identifier, an entry identifier, and an inclusion proof reference.",
+        "blocks": "Build provenance URIs do not satisfy this gate. They attest the build, not this record.",
+        "note": "Presence is what this profile checks. Resolving the anchor and verifying the inclusion proof is relying-party work, and a gate that only parses a URI is a gate a string satisfies."
+      }
+    ]
+  },
+
+  "status_semantics": {
+    "appraisal_lifetime_is_cadence": "The appraisal lifetime is the re-evaluation cadence. It is not a promise that the judgment holds for the whole window.",
+    "supersession": "A signed superseding status event carrying a higher monotonic sequence invalidates the earlier appraisal immediately, whether or not that appraisal has expired.",
+    "monotonic_rule": "A resource MUST NOT accept appraisal sequence n after learning of a valid superseding event with sequence greater than n.",
+    "unreachable": {
+      "high_risk_resources": "fail_closed",
+      "behavior": "Deny, or require human approval, according to local policy.",
+      "note": "Unknown is not current. A resource that cannot reach the status channel has not checked it."
+    }
+  },
+
+  "issuer_model": {
+    "evaluator": "The evaluator signs the appraisal with its own key. The signature identifies who made the judgment, not who accredited them.",
+    "accreditation": "Assessor accreditation of the evaluator lives in the evaluator's issuer metadata as a JWS signed by the assessor, alongside the evaluator's public keys.",
+    "absent_accreditation": "Absence of an accreditation assertion means the evaluator is self-asserted. Self-asserted is a valid state, not an error, and a relying party decides whether to accept it.",
+    "relying_party": "Which evaluators a relying party accepts is relying-party policy. This profile does not name a trusted issuer list."
+  },
+
+  "limits": [
+    "This is a demo evaluation profile drafted for the Verifiable Agent Summit exercise. It is not CSA-ratified and it does not speak for the ATF working group.",
+    "The per-level evidence mapping is a proposal. It is headed for the v1.0 working group and is expected to change there.",
+    "A level under this profile says what one evidence object supported at one time. It does not say that an agent is safe, certified, or authorized.",
+    "The profile checks the presence and shape of evidence fields. It does not resolve remote references, fetch reference values, or re-verify a hardware quote."
+  ]
+}

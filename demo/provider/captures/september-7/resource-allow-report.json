@@ -1,0 +1,45 @@
+{
+  "verified": true,
+  "agent_token": {
+    "iss": "https://verifiable-agent-summit-provider.vercel.app",
+    "sub": "aauth:planner@verifiable-agent-summit-provider.vercel.app",
+    "jti": "7f56041b-c1c8-43a4-9058-5a0751b9581f",
+    "iat": 1788809058,
+    "exp": 1788809358,
+    "established_by": "the agent provider, whose signature this resource verified"
+  },
+  "atf": {
+    "profile": "csa-atf:0.9.1",
+    "level": "senior",
+    "exp": 1788811167,
+    "sequence": 42,
+    "appraisal_id": "urn:uuid:c2ca1979230c926211d2d30ebd9defd0",
+    "appraisal_issuer": "https://demo.verifiedagents.ai",
+    "appraisal_hash": "sha256:cabe9427504d13ce09f427e4fc1692e59419a34832b9fd2f734e63416a516d9b",
+    "evidence_hash": "sha256:8d30f2194c9a18b120b52e086689208a18af0bf114973ad007e10d6ca4052dd0",
+    "appraisal_subject": "spiffe://example.org/agent/planner",
+    "workload_id": "spiffe://example.org/agent/planner",
+    "established_by": "the ATF evaluator named in appraisal_issuer, as asserted by the agent provider"
+  },
+  "binding": {
+    "asserted_by_agent_provider": "demo-proposal",
+    "established_by_this_resource": "ap-asserted",
+    "means": "the agent provider signed one token carrying sub, appraisal_subject and workload_id, and this resource checked that appraisal_subject and workload_id do not contradict each other. It did not establish that an aauth: identifier and a spiffe: identifier name the same principal — nothing in AAuth or TRACE says who asserts that (interface contract, D-05)."
+  },
+  "policy_applied": {
+    "profiles": [
+      "csa-atf:0.9.1"
+    ],
+    "minimum_level": "senior",
+    "evaluators": [
+      "https://demo.verifiedagents.ai"
+    ]
+  },
+  "limits": [
+    "This resource verified the agent provider’s signature over the agent token. It did not verify the ATF evaluator’s signature: the claim carries appraisal_hash, a digest of the complete signed appraisal, but no way to resolve the document behind it.",
+    "The grade is therefore the agent provider’s assertion, held on the agent provider’s authority — as sub and cnf are. It is not proof that the named evaluator issued it.",
+    "appraisal_hash and evidence_hash are commitments. Anyone holding the appraisal or the TRACE record can bind it to this token; this resource holds neither.",
+    "The subject binding is a proposal (interface contract, D-05). What was checked is that the agent provider did not contradict itself, not that an AAuth identifier and a TRACE subject are the same principal.",
+    "A qualifying level is eligibility for consideration. It is not permission, and it is not a safety claim."
+  ]
+}

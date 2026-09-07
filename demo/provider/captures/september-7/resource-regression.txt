@@ -1,0 +1,29 @@
+
+=== case 3: payload edited, level raised to principal ===
+GET https://atf-demo.aauth.dev/agent/echo
+token demo\provider\out\agent-token-tampered.jwt, signed with demo\provider\private\agent-key.pem
+sent     signature: sig=:SXSLn2BeYLtTmHNF09EDS1rkBy9pFOEPugYYN/bihnGYwi/8CbuFGVsHgb12Y77EHWVxtv/0X6izg+gi5miwDA==:
+sent     signature-input: sig=("@method" "@authority" "@path" "signature-key");created=1788807599
+sent     signature-key: [token omitted from repository capture]
+status   401 Unauthorized
+received aauth-requirement: requirement=agent-token
+received content-type: application/problem+json
+received link: <https://atf-demo.aauth.dev/.well-known/aauth-resource.json>; rel="aauth-resource"
+received signature-error: error=invalid_jwt
+{"type":"about:blank","title":"Unauthorized","status":401,"error":"invalid_jwt","detail":"JWT signature verification failed: signature verification failed"}
+MATCH    expected 401 with signature-error: error=invalid_jwt
+
+=== case 7: expired token, payload edited: which reason is reported ===
+GET https://atf-demo.aauth.dev/agent/echo
+token demo\provider\out\agent-token.jwt, signed with demo\provider\private\agent-key.pem
+edited   sub=aauth:admin@verifiable-agent-summit-provider.vercel.app, signature left alone
+sent     signature: sig=:6zeF4r/VDsvtSzS7eo6iic3ZmrXwAJwVr36XttjUWk9HDI6wzNXFsSxVnjcaiP0aukOwOF2l4tRFRF00GLbDCw==:
+sent     signature-input: sig=("@method" "@authority" "@path" "signature-key");created=1788807599
+sent     signature-key: [token omitted from repository capture]
+status   401 Unauthorized
+received aauth-requirement: requirement=agent-token
+received content-type: application/problem+json
+received link: <https://atf-demo.aauth.dev/.well-known/aauth-resource.json>; rel="aauth-resource"
+received signature-error: error=invalid_jwt
+{"type":"about:blank","title":"Unauthorized","status":401,"error":"invalid_jwt","detail":"JWT signature verification failed: signature verification failed"}
+MATCH    expected 401 with signature-error: error=invalid_jwt
