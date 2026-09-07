@@ -1,0 +1,18 @@
+{
+  "ready_for_demo_issuance": true,
+  "checked_at": 1788809058,
+  "appraisal_issuer": "https://demo.verifiedagents.ai",
+  "appraisal_id": "urn:uuid:c2ca1979230c926211d2d30ebd9defd0",
+  "record_hash": "sha256:8d30f2194c9a18b120b52e086689208a18af0bf114973ad007e10d6ca4052dd0",
+  "appraisal_hash": "sha256:cabe9427504d13ce09f427e4fc1692e59419a34832b9fd2f734e63416a516d9b",
+  "profile_hash": "sha256:a8b6554101efbec38ba9597b6aec805ea104c26e93083b99b01b3fd2a203c532",
+  "expires_at": 1788811167,
+  "remaining_seconds": 2109,
+  "level": "senior",
+  "limits": [
+    "status_not_queried",
+    "workload_not_reappraised",
+    "fixture_runtime_evidence",
+    "cross_namespace_binding_unresolved"
+  ]
+}

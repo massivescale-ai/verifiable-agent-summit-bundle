@@ -1,8 +1,7 @@
-Independent verifier run, captured 2026-09-05 04:53 UTC
-Command: python demo/tools/verify_chain.py
-Python: Python 3.12.10
-TRACE verifier library: agentrust-trace 0.9.0
-
+Local fixture verification capture
+Captured: 2026-09-07T20:48:24.583408+00:00
+Verifier: agentrust-trace 0.9.0
+Runtime fields: declared fixtures; no deployed resource or live status feed called
 
 
 TV-01  Fresh qualifying evidence permits an in-scope request.
@@ -94,5 +93,3 @@ TV-07  High-risk resource cannot reach the status channel. Unknown is not curren
 PASS  TV-07  deny/status_unavailable
 
 7/7 cases matched their expected outcome.
-
-Exit code: 0

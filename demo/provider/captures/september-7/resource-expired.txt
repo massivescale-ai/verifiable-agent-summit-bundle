@@ -1,0 +1,29 @@
+
+=== case 2: the same token past its expiry ===
+GET https://atf-demo.aauth.dev/agent/echo
+token demo\provider\out\agent-token.jwt, signed with demo\provider\private\agent-key.pem
+sent     signature: sig=:e6V2E6yg8TtDGzh/GLnF+DmHSe3pHZwEYHkzjhlqazyaLa9g+ynNlYDeCUWLvsffxFhY4bdAPPLiqiTk1mwmCg==:
+sent     signature-input: sig=("@method" "@authority" "@path" "signature-key");created=1788809612
+sent     signature-key: [token omitted from repository capture]
+status   401 Unauthorized
+received aauth-requirement: requirement=agent-token
+received content-type: application/problem+json
+received link: <https://atf-demo.aauth.dev/.well-known/aauth-resource.json>; rel="aauth-resource"
+received signature-error: error=expired_jwt
+{"type":"about:blank","title":"Unauthorized","status":401,"error":"expired_jwt","detail":"Token has expired"}
+MATCH    expected 401 with signature-error: error=expired_jwt
+
+=== case 7: expired token, payload edited: which reason is reported ===
+GET https://atf-demo.aauth.dev/agent/echo
+token demo\provider\out\agent-token.jwt, signed with demo\provider\private\agent-key.pem
+edited   sub=aauth:admin@verifiable-agent-summit-provider.vercel.app, signature left alone
+sent     signature: sig=:ATy6/15qPGEXDfZfn7PvtqocOwW8R1upaYJ1D2ekZpmMlQmdCsIq4rCAhNf+mDdG2iivdTKDDQwZl1LqaUmGAA==:
+sent     signature-input: sig=("@method" "@authority" "@path" "signature-key");created=1788809612
+sent     signature-key: [token omitted from repository capture]
+status   401 Unauthorized
+received aauth-requirement: requirement=agent-token
+received content-type: application/problem+json
+received link: <https://atf-demo.aauth.dev/.well-known/aauth-resource.json>; rel="aauth-resource"
+received signature-error: error=invalid_jwt
+{"type":"about:blank","title":"Unauthorized","status":401,"error":"invalid_jwt","detail":"JWT signature verification failed: signature verification failed"}
+MATCH    expected 401 with signature-error: error=invalid_jwt

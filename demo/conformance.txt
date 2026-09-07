@@ -1,0 +1,36 @@
+TRACE conformance suite against a freshly issued demo record
+Suite distribution metadata: agentrust-trace-tests 0.2.0
+Suite source revision: 660cf8434cf31168dc2509b28d5bb6ce06e2385d
+Captured: 2026-09-07 20:51 UTC
+Level requested: 1
+Record iat: 1788814314 (current clock, not the fixtures' synthetic clock)
+Expected nonce supplied to the suite: ZGVtby1ub25jZS12YXMtMjAyNg
+
+
+TRACE Conformance Report -- Level 1
+Format : trace
+Record : C:\Users\imran\AppData\Local\Temp\tmp520r55la\record.json
+
+  TR-ENV  PASS        eat_profile sentinel matches
+  TR-ENV  PASS        iat is valid and fresh (1788814314)
+  TR-ENV  PASS        subject is a valid workload identity URI ('spiffe://example.org/agent/planner')
+  TR-ENV  PASS        cnf.jwk.kty present ('OKP')
+  TR-ENV  PASS        cnf.jwk carries no private key material
+  TR-SIG  PASS        cnf.jwk key type is supported (kty='OKP', crv='Ed25519')
+  TR-SIG  PASS        Ed25519 signature verified
+  TR-POL  PASS        policy.bundle_hash has valid digest format
+  TR-POL  PASS        policy.enforcement_mode is valid ('enforce')
+  TR-POL  SKIP        policy.policy_uri not resolved; no resolver supplied
+  TR-APR  PASS        appraisal.status is valid ('affirming')
+  TR-APR  PASS        appraisal.verifier is an absolute URI ('https://verifier.example/tpm')
+  TR-APR  PASS        appraisal.policy_ref is an absolute URI ('https://registry.example/policy/tpm2-appraisal-v1')
+  TR-APR  PASS        appraisal.timestamp is not in the future (1788814314)
+  TR-APR  PASS        appraisal.status is affirming, as Level 1 requires
+  TR-RTE  PASS        runtime.platform is registered ('tpm2')
+  TR-RTE  PASS        runtime.measurement has valid digest format
+  TR-RTE  PASS        runtime.rim_uri is an https URI (https://registry.example/rim/agent-runtime-v1)
+  TR-RTE  PASS        runtime.nonce matches the verifier challenge
+  TR-SCA  PASS        build_provenance.slsa_level is valid (2)
+  TR-SCA  PASS        build_provenance.digest has valid digest format
+
+Result: PASS  (21 checks, 1 skipped)

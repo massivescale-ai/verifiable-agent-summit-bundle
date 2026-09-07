@@ -1,4 +1,1 @@
-# This bundle publishes digests over its own files. Line-ending conversion on
-# checkout would change those bytes and break `sha256sum -c SHA256SUMS` on
-# Windows, so nothing here is converted.
-* -text
+* text eol=lf

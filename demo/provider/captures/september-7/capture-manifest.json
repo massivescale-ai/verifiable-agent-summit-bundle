@@ -1,0 +1,44 @@
+{
+  "date": "2026-09-07",
+  "source_before_readiness_changes": "f1720bb",
+  "resource_repository_head_observed": "2beec98d0c81f7caefa3564612b9592cf95823d1",
+  "deployment_commit_verified": false,
+  "versions": {
+    "node": "v24.18.1",
+    "python": "Python 3.12.10",
+    "client_httpsig": "2.3.0"
+  },
+  "resource": "https://atf-demo.aauth.dev",
+  "token_sha256": "4db6b57e6d30d7aff2c1503f9716f06f46c63c5f0ff6d1043a6d15075b058cd4",
+  "token_iat": 1788809058,
+  "token_exp": 1788809358,
+  "requested_ttl_seconds": 300,
+  "same_token_in_fresh_and_expired_captures": true,
+  "cases": {
+    "1": "200",
+    "2": "401 expired_jwt",
+    "3": "401 invalid_jwt",
+    "4": "401 requirement=agent-token",
+    "5": "401 requirement=person-token",
+    "7": "401 invalid_jwt"
+  },
+  "fresh_request_epochs": [
+    1788809150,
+    1788809150,
+    1788809150,
+    1788809150
+  ],
+  "expired_request_epochs": [
+    1788809612,
+    1788809612
+  ],
+  "redactions": [
+    "compact tokens omitted from signature-key headers; raw captures retained locally"
+  ],
+  "limits": [
+    "runtime fields are fixtures",
+    "resource does not verify evaluator signature",
+    "no live status consumer",
+    "cross-namespace binding remains provider-asserted"
+  ]
+}

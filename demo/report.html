@@ -189,7 +189,7 @@ a:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); ou
 
 <div class="wrap">
   <header class="masthead">
-    <p class="label">Verifiable Agent Summit &middot; integration run</p>
+    <p class="label">Verifiable Agent Summit &middot; local fixture capture</p>
     <h1>A judgment an agent cannot keep spending</h1>
     <div class="masthead__chain">
       <b>TRACE</b> evidence <span aria-hidden="true">&rarr;</span>
@@ -198,13 +198,14 @@ a:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); ou
       <b>resource</b> decision
     </div>
     <p class="lede">
-      Three runs of the same chain, captured from live execution. Every record and
+      Three runs of the local fixture chain. No deployed resource or live status
+      service was called. Every record and
       appraisal below was signed with Ed25519 over RFC 8785 canonical JSON at the
       moment this page was generated, and every verdict came from an independent
       verifier reading only the public keys.
     </p>
     <div class="stamp">
-      <span>captured 05 September 2026, 04:53:41 UTC</span>
+      <span>captured 07 September 2026, 20:46:36 UTC</span>
       <span>profile tag:agentrust-io.com,2026:trace-v0.2</span>
       <span>appraisal seq 42</span>
     </div>
@@ -212,12 +213,12 @@ a:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); ou
 
   <section class="facts" aria-label="Artifacts in this run">
     <dl class="facts__grid">
-      <div class="fact"><dt>Trust record digest</dt><dd>sha256:59631011af6a515dfa8bb4f53d3cf5d662ca4d03e2f63d447a939f60ecbb231e</dd></div>
+      <div class="fact"><dt>Trust record digest</dt><dd>sha256:e4058882f7bc5178f3da278ad50d58d3f1ba4501dfb89d4daf549df6b250b506</dd></div>
       <div class="fact"><dt>Appraised level</dt><dd class="big">SENIOR</dd></div>
-      <div class="fact"><dt>Token validity (UTC)</dt><dd>04:53:40 &rarr; 05:53:40</dd></div>
+      <div class="fact"><dt>Token validity (UTC)</dt><dd>20:46:36 &rarr; 21:46:36</dd></div>
       <div class="fact"><dt>Superseding event</dt><dd>seq 43 &middot; ATF-ROUTE-PROHIBITED</dd></div>
-      <div class="fact"><dt>TRACE issuer key</dt><dd>gljedAktsShnHzGq8fqfaabEI2xgyKnnW_99tC5o5e8</dd></div>
-      <div class="fact"><dt>ATF evaluator key</dt><dd>NlLutSsJmPKHPJdjPbls98wWc3PRqPfCBP7Y--7kU5w</dd></div>
+      <div class="fact"><dt>TRACE issuer key</dt><dd>LbWp63U5F-NLzZTA-H4hEsT2OJWe3NEYKpjJdEbNOF0</dd></div>
+      <div class="fact"><dt>ATF evaluator key</dt><dd>6uX1PcOxGOYBNfpy2YOXssvCJbF4V2QTj9_bjhqPEXA</dd></div>
     </dl>
   </section>
 
@@ -237,7 +238,7 @@ a:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); ou
           <dl class="run__meta">
             <div><dt>reason</dt><dd class="mono">eligible_and_permitted</dd></div>
             <div><dt>dispatch</dt><dd>dispatched</dd></div>
-            <div><dt>decided in</dt><dd class="num">0.97 ms</dd></div>
+            <div><dt>decided in</dt><dd class="num">1.32 ms</dd></div>
           </dl>
         </header>
         <ol class="steps">
@@ -263,7 +264,7 @@ a:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); ou
           <dl class="run__meta">
             <div><dt>reason</dt><dd class="mono">appraisal_superseded</dd></div>
             <div><dt>dispatch</dt><dd>denied, not dispatched</dd></div>
-            <div><dt>decided in</dt><dd class="num">0.58 ms</dd></div>
+            <div><dt>decided in</dt><dd class="num">0.8 ms</dd></div>
           </dl>
         </header>
         <ol class="steps">
@@ -289,7 +290,7 @@ a:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); ou
           <dl class="run__meta">
             <div><dt>reason</dt><dd class="mono">evidence_hash_mismatch</dd></div>
             <div><dt>dispatch</dt><dd>denied, not dispatched</dd></div>
-            <div><dt>decided in</dt><dd class="num">0.42 ms</dd></div>
+            <div><dt>decided in</dt><dd class="num">0.48 ms</dd></div>
           </dl>
         </header>
         <ol class="steps">
@@ -327,7 +328,7 @@ a:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); ou
       <p class="label">What this does not show</p>
       <ul>
         <li>Runtime measurements are fixture values, not a live enclave quote.</li>
-        <li>The ATF profile version is a placeholder until it is fixed.</li>
+        <li>This local harness uses its historical placeholder profile; the deployed capture uses csa-atf 0.9.1.</li>
         <li>AAuth carriage is modelled as JSON, not a real token.</li>
         <li>Issuer and verifier ran on one machine, so this is an integration
         proposal, not an interop result.</li>
